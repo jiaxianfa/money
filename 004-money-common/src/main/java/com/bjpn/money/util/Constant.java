@@ -13,4 +13,5 @@ public class Constant {
     public static final int BID_LOAN_STATUS_FAIL = 50002;
     public static final int BID_INFO_FAIL = 50000;
     public static final int BID_INFO_SUCCESS = 20000;
+    public static final int TEST = 20000;
 }
