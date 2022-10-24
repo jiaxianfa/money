@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/001-money-parent/pom.xml" />
+        <option value="$PROJECT_DIR$/002-money-exterface/pom.xml" />
+        <option value="$PROJECT_DIR$/003-money-dataservice/pom.xml" />
+        <option value="$PROJECT_DIR$/004-money-common/pom.xml" />
+        <option value="$PROJECT_DIR$/005-money-web/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

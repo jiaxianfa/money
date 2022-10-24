@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjpn.money.mapper.BidInfoMapper">
+  <!--所有的colum就是字段，所有的property就是属性-->
+  <resultMap id="BaseResultMap" type="com.bjpn.money.model.BidInfo">
+    <!--主键和id对应-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <!--其他一一对应-->
+    <result column="loan_id" jdbcType="INTEGER" property="loanId" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="bid_money" jdbcType="DOUBLE" property="bidMoney" />
+    <result column="bid_time" jdbcType="TIMESTAMP" property="bidTime" />
+    <result column="bid_status" jdbcType="INTEGER" property="bidStatus" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap2" type="com.bjpn.money.model.BidInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="loan_id" jdbcType="INTEGER" property="loanId" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="bid_money" jdbcType="DOUBLE" property="bidMoney" />
+    <result column="bid_time" jdbcType="TIMESTAMP" property="bidTime" />
+    <result column="bid_status" jdbcType="INTEGER" property="bidStatus" />
+    <!--这个是针对内置添加对象的  添加的 “user对象“ 属性   类型-->
+    <association property="user" javaType="com.bjpn.money.model.User">
+      <!--这里的属性对应的是查出来的结果集(临时表)的列-->
+      <!--“user对象“的属性id要和字段id对应，但是有2个id，所以要给id起别名 userId相当于u_user.id -->
+      <id property="id" column="userId"/>
+      <!--“user对象“的属性phone要和字段phone对应-->
+      <result property="phone" column="phone"/>
+    </association>
+  </resultMap>
+
+  <resultMap id="BaseResultMap3" type="com.bjpn.money.model.BidInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="loan_id" jdbcType="INTEGER" property="loanId" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="bid_money" jdbcType="DOUBLE" property="bidMoney" />
+    <result column="bid_time" jdbcType="TIMESTAMP" property="bidTime" />
+    <result column="bid_status" jdbcType="INTEGER" property="bidStatus" />
+    <association property="loanInfo" javaType="com.bjpn.money.model.LoanInfo">
+      <!--这里的属性对应的是查出来的结果集(临时表)的列-->
+      <!--“bidInfo对象“的属性id要和字段id对应，但是有2个id，所以要给id起别名 userId相当于u_user.id -->
+      <id property="id" column="loanInfoId"/>
+      <!--“user对象“的属性phone要和字段phone对应-->
+      <result property="productName" column="product_name"/>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, loan_id, uid, bid_money, bid_time, bid_status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_bid_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from b_bid_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bjpn.money.model.BidInfo">
+    insert into b_bid_info (id, loan_id, uid, 
+      bid_money, bid_time, bid_status
+      )
+    values (#{id,jdbcType=INTEGER}, #{loanId,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, 
+      #{bidMoney,jdbcType=DOUBLE}, #{bidTime,jdbcType=TIMESTAMP}, #{bidStatus,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bjpn.money.model.BidInfo">
+    insert into b_bid_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="loanId != null">
+        loan_id,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="bidMoney != null">
+        bid_money,
+      </if>
+      <if test="bidTime != null">
+        bid_time,
+      </if>
+      <if test="bidStatus != null">
+        bid_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="loanId != null">
+        #{loanId,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="bidMoney != null">
+        #{bidMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="bidTime != null">
+        #{bidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bidStatus != null">
+        #{bidStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bjpn.money.model.BidInfo">
+    update b_bid_info
+    <set>
+      <if test="loanId != null">
+        loan_id = #{loanId,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="bidMoney != null">
+        bid_money = #{bidMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="bidTime != null">
+        bid_time = #{bidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bidStatus != null">
+        bid_status = #{bidStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bjpn.money.model.BidInfo">
+    update b_bid_info
+    set loan_id = #{loanId,jdbcType=INTEGER},
+      uid = #{uid,jdbcType=INTEGER},
+      bid_money = #{bidMoney,jdbcType=DOUBLE},
+      bid_time = #{bidTime,jdbcType=TIMESTAMP},
+      bid_status = #{bidStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--首页：累计成交金额-->
+  <select id="selectBidMoneySum" resultType="double">
+      select sum(bid_money) from b_bid_info
+  </select>
+<!--   产品详情页：根据id查询投资记录  还需要客户手机号,所以需要多表查询
+因为临时表有2个id，所以要给id起别名，所以才单独把id写出来-->
+  <select id="selectBidInfosByLoanId" resultMap="BaseResultMap2">
+    select *,u_user.id userId from b_bid_info,u_user where loan_id=#{loanIdxxx} and b_bid_info.uid=u_user.id
+  </select>
+  <!--小金库：根据用户id和数量查询投资信息 loanInfoId-->
+  <select id="selectBidInfoByUidAndNumber" resultMap="BaseResultMap3">
+   select * ,b_loan_info.id loanInfoId from b_bid_info,b_loan_info where uid = #{userId} and b_bid_info.loan_id = b_loan_info.id order by bid_time desc limit #{start},#{content}
+  </select>
+</mapper>

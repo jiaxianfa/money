@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>动力金融网 - 专业的互联网金融信息服务平台</title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/trafficStatistics.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/share.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/base.css}"/>
+</head>
+<body>
+<!-- 页头start -->
+<div id="header">
+    <div th:include="commons/header :: html"></div>
+</div>
+<!--页头end-->
+
+<!-- 二级导航栏start -->
+<div th:include="commons/subNav :: html"></div>
+<!-- 二级导航栏end -->
+
+<div class="mainBox">
+    <div class="homeWap">
+        <!--账户信息start-->
+        <div class="credenMain clearfix">
+            <div class="dog-ear"></div>
+            <div class="credenBasic">
+                <div class="credenName">
+                    <div class="head">
+                        <span th:if="${session.loginUser==null}">
+                            <!--显示示例图片-->
+                            <img id="user_photo" th:src="@{/images/header.png}" width="90" height="90"/>
+                        </span>
+                        <span th:if="${session.loginUser!=null&&session.loginUser.headerImage!=null}">
+                            <!--自定义图片-->
+                            <!--<img id="user_photo" th:src="|../../header/${session.loginUser.headerImage}|" width="90" height="90"/>-->
+                            <img id="user_photo" th:src="@{/header/{address}(address=${session.loginUser.headerImage})}" width="90" height="90"/>
+                        </span>
+                        <input type="file" id="file" name="header" style="display: none"/>
+                        <a href="#" onclick="uploadHeader()">上传头像</a>
+                    </div>
+                    <script type="text/javascript">
+                        function uploadHeader() {
+                            //弹出上传框
+                            $("#file").click();
+                            //提交事件
+                            $("#file").change(function () {
+                                //获取文件列表
+                                var file = $("#file")[0].files;
+                                //判断是否选择了文件
+                                if (!(file.length > 0)) {
+                                    alert("请上传文件")
+                                    return
+                                }
+                                //创建formdata
+                                var fd = new FormData();
+                                //向formData中传入数据
+                                fd.append("header", file[0]);
+                                //向后台发送请求
+                                $.ajax({
+                                    type: "post",
+                                    url: "/005-money-web/loan/uploadHeader",
+                                    //数据不需要编码
+                                    contentType: false,
+                                    //数据对象不需要转换成键值对格式
+                                    processData: false,
+                                    //清除缓存
+                                    // cache: false,
+                                    data: fd,
+                                    success: function (data) {
+                                        if (data.code == 0) {
+                                            alert(data.message);
+                                        }
+                                        if (data.code == 1) {
+                                            alert("文件上传成功")
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    </script>
+                    <h3 class="name">
+                            <span th:if="${session==null&&session.loginUser.name==null}">
+                                <a href="#" onclick="toAuthentication()">请认证姓名</a>
+                            <span th:if="${session!=null&&session.loginUser.name!=null}">
+                                <span th:text="${session.loginUser.name}">请认证姓名</span>
+                            </span>
+                        </span>
+                    </h3>
+                    <h4></h4>
+                    <span th:if="${session.loginUser!=null}">
+                        <h4 th:text="${session.loginUser.phone}">13725698888</h4>
+                        <h4 th:text="|最近登录：${#dates.format(#session.getAttribute('loginUser').lastLoginTime,'yyyy-MM-dd HH:mm:ss')}|">最近登录：2017-05-21 15:23:36</h4>
+                    </span>
+                </div>
+                <i class="borderRight"></i>
+                <ul class="credenBalance">
+                    <li class="availMoney">
+                        <h3>可用余额：</h3>
+                        <!--课后：金额>10000,显示'****',点击'****'显示余额(如果>100000,需要发短信)；<10000,直接显示-->
+                        <!--可以直接用标签生成子标签，不需要直接把3个标签都写出来,以免扰乱页面格式-->
+                        <span class="moneyIcon" id="moneyIcon" >
+                            <!--<i id='userMoney1' onclick='userMoney1();'>¥ 9000.0 元</i>-->
+                        </span>
+                        <!--准备生成的标签-->
+                        <!--<i id="userMoney1" onclick="userMoney1()"><i>¥ 9000.0 元</i>
+                        <i id="userMoney2" onclick="userMoney2()"><i>¥ 9000.0 元</i><-->
+                        <a class="recharge" th:href="@{/loan/page/toRecharge}">充值</a>
+                        <a class="inves" th:href="@{/loan/loan}">投资</a>
+                    </li>
+                    <script type="text/javascript">
+                        //页面加载进来，直接异步查询可用余额，不需要事件触发了
+                        $.get("/005-money-web/loan/page/queryFinance",function (data) {
+                            if (data.code==1) {
+                                //小于号是关键字,所以用>
+                                if (window.parseInt(data.message) >= 100000) {
+                                    //生成大于10w的标签
+                                    $("#moneyIcon").html("<i id='userMoney1' onclick='userMoney1();'>****</i>");
+                                } else if (window.parseInt(data.message) >= 10000) {
+                                    //生成大于1w小于10w的标签
+                                    $("#moneyIcon").html("<i id='userMoney2' onclick='userMoney2();'>****</i>");
+                                } else {
+                                    //直接显示余额
+                                    $("#moneyIcon").html("<i id='userMoney3' onclick='userMoney3();'>¥"+data.message+"元</i>")
+                                }
+                            }
+                            if (data.code == 0) {
+                                alert(data.message);
+                            }
+                        });
+                        //大于10w的点击事件
+                        function userMoney1() {
+                            //获取金额值
+                            var money = $("#userMoney1").html();
+                            if (money!="****") {
+                                $("#userMoney1").html("****")
+                            }
+                            if (money=="****") {
+                                //要求客户输入手机号并获取  会自动弹窗让客户输入信息
+                                var phone = prompt("请输入您的手机号进行短信验证","");
+                                //发起获取验证码的异步请求
+                                $.get(rootPath+"/loan/page/messageCode",{"phone":phone},function (data) {
+                                    alert(data.message);
+                                    //继续弹窗让客户输入短信验证码
+                                    if (prompt("请输入短信验证码", "") == data.message + "") {
+                                        //发起查询余额的异步请求
+                                        $.get("/005-money-web/loan/page/queryFinance", function (data) {
+                                            if (data.code == 1) {
+                                                $("#userMoney1").html("¥" + data.message + "元");
+                                            }
+                                            if (data.code == 0) {
+                                                alert(data.message);
+                                            }
+                                        });
+                                    } else {
+                                        alert("验证码输入错误");
+                                    }
+                                });
+                            }
+                        }
+                        //大于1w小于10w的的点击事件
+                        function userMoney2() {
+                            //获取金额值
+                            var money = $("#userMoney2").html();
+                            if (money!="****") {
+                                $("#userMoney2").html("****")
+                            }
+                            if (money=="****") {
+                                //发起查询余额的异步请求
+                                $.get("/005-money-web/loan/page/queryFinance", function (data) {
+                                    if (data.code == 1) {
+                                        $("#userMoney2").html("¥" + data.message + "元");
+                                    }
+                                    if (data.code == 0) {
+                                        alert(data.message);
+                                    }
+                                });
+                            }
+                        }
+                        //小于1w点击事件
+                        function userMoney3() {
+                            //获取金额值
+                            var money = $("#userMoney3").html();
+                            if (money!="****") {
+                                $("#userMoney3").html("****")
+                            }
+                            if (money=="****") {
+                                //发起查询余额的异步请求
+                                $.get("/005-money-web/loan/page/queryFinance",function (data) {
+                                    if (data.code==1) {
+                                        $("#userMoney3").html("¥"+data.message+"元");
+                                    }
+                                    if (data.code == 0) {
+                                        alert(data.message);
+                                    }
+                                });
+                            }
+                        }
+                    </script>
+
+
+                        <!--这里用异步可以直接访问到，同步的话，session清除以后刷新页面，就会报错，所以不建议用下面这个方法-->
+                       <!-- <span class="moneyIcon">
+                            <div th:if="${#session.getAttribute('financeAccount').availableMoney<10000}">
+                                 <i th:text="|¥ ${#session.getAttribute('financeAccount').availableMoney} 元|">¥ 9000.0 元</i>
+                            </div>
+
+                            <div th:if="${#session.getAttribute('financeAccount').availableMoney>=10000&&#session.getAttribute('financeAccount').availableMoney<100000}">
+                                 <i id="readMoneyLess">****</i>
+                            </div>
+                            <div th:if="${#session.getAttribute('financeAccount').availableMoney>=100000}">
+                                 <i id="readMoneyMore">****</i><br/>
+                                <input id="phone"  style="width: 170px" placeholder="请输入11位手机号码"/><br/>
+                            </div>
+                                <script type="text/javascript">
+                                    $(function () {
+
+                                        //大于1w小于10w点击事件
+                                        $("#readMoneyLess").click(function () {
+                                            //获得文本框的内容
+                                            var moneyValue = $(this).html();
+                                            //不是隐藏，让值隐藏
+                                            if (moneyValue!="****") {
+                                                $(this).html("****")
+                                            }
+                                            //隐藏就让值显示
+                                            if (moneyValue == "****") {
+                                                $.get("/005-money-web/loan/page/queryFinance",function (data) {
+                                                    if (data.code==1) {
+                                                        //这里是ajax的jquery对象，不能用this了
+                                                        $("#readMoneyLess").html("¥"+data.message+"元");
+                                                    }
+                                                    if (data.code == 0) {
+                                                        alert(data.message);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                        $("#readMoneyMore").click(function () {
+                                            //获取手机号
+                                            var phone = $("#phone").val();
+                                            if (phone==null||phone=="") {
+                                                alert("需要短信验证码才能查看")
+                                                return;
+                                            }
+                                            $.get("/005-money-web/loan/page/messageCode",{"phone":phone},function () {
+
+                                            });
+                                        })
+                                    })
+                                </script>
+                        </span>
+                        <a class="recharge" th:href="@{/loan/page/toRecharge}">充值</a>
+                        <a class="inves" th:href="@{/loan/loan}">投资</a>-->
+
+                </ul>
+            </div>
+        </div>
+        <!--账户信息end-->
+
+        <!--最新操作数据start-->
+        <div class="allInvest clearfix">
+            <div class="eachInvest invest-tab">
+                <h3>最近投资</h3>
+                <div class="invest-tab-box">
+                    <dl>
+                        <dt>
+                            <span class="number" style="text-align:left;">序号</span>
+                            <span class="number">投资产品</span>
+                            <span class="money">投资金额</span>
+                            <span class="profit">投资时间</span>
+                        </dt>
+                        <dd th:each="bidInfo:${bidInfos}">
+                            <span class="name" th:text="${bidInfo.loanInfo.id}">1</span>
+                            <span class="number" th:text="${bidInfo.loanInfo.productName}">个人消费贷</span>
+                            <span class="money"  th:text="${bidInfo.bidMoney}">5000.0</span>
+                            <span class="profit" th:text="${#dates.format(bidInfo.bidTime,'yyyy-MM-dd')}">2017-06-12</span>
+                        </dd>
+                    </dl>
+                    <div class="more-allinvest">
+                        <a th:href="@{/loan/myInvest}"><span>查看全部投资</span><i></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="eachInvest invest-tab invest-tab-box">
+                <h3>最近充值</h3>
+                <dl>
+                    <dt>
+                        <span class="number" style="text-align:left;">序号</span>
+                        <span class="number">充值描述</span>
+                        <span class="money">充值金额</span>
+                        <span class="money">充值时间</span>
+                    </dt>
+                    <dd th:each="rechargeRecord:${rechargeRecords}">
+                        <span class="name" th:text="${rechargeRecord.id}">1</span>
+                        <span class="number" th:text="${rechargeRecord.rechargeDesc}">支付理财</span>
+                        <span class="money" th:text="${rechargeRecord.rechargeMoney}">1000.0</span>
+                        <span class="profit" th:text="${#dates.format(rechargeRecord.rechargeTime,'yyyy-MM-DD')}">2017-05-01</span>
+                    </dd>
+                </dl>
+                <div class="more-allinvest">
+                    <a th:href="@{/loan/myRecharge}"><span>查看全部充值</span><i></i></a>
+                </div>
+            </div>
+
+            <div class="eachInvest recent-earnings">
+                <h3>最近收益</h3>
+                <dl id="recentearning">
+                    <dt>
+                        <span class="number" style="text-align:left;">序号</span>
+                        <span class="number">项目名称</span>
+                        <span class="number name" style="text-align:center;">收益日期</span>
+                        <span class="profit">收益金额</span>
+                    </dt>
+                    <dd th:each="incomeRecord:${incomeRecords}">
+                        <span class="number" style="text-align:left;" th:text="${incomeRecord.loanInfo.id}">1</span>
+                        <span class="number" th:text="${incomeRecord.loanInfo.productType}">新手宝</span>
+                        <span class="number name" style="text-align:center;" th:text="${#dates.format(incomeRecord.incomeDate,'yyyy-MM-dd')}">2017-05-12</span>
+                        <span class="profit" th:text="${incomeRecord.incomeMoney}">12.6</span>
+
+                    </dd>
+                </dl>
+                <div id="moreRecentIncome" class="more-allinvest">
+                    <a th:href="@{/loan/myIncome}"><span>查看全部收益计划</span><i></i></a>
+                </div>
+            </div>
+        </div>
+        <!--最新操作数据end-->
+    </div>
+</div>
+<!--页脚start-->
+<div th:include="commons/footer :: html"></div>
+<!--页脚end-->
+</body>
+</html>

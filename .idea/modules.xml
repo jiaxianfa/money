@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/001-money-parent/001-money-parent.iml" filepath="$PROJECT_DIR$/001-money-parent/001-money-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/002-money-exterface/002-money-exterface.iml" filepath="$PROJECT_DIR$/002-money-exterface/002-money-exterface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/003-money-dataservice/003-money-dataservice.iml" filepath="$PROJECT_DIR$/003-money-dataservice/003-money-dataservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/004-money-common/004-money-common.iml" filepath="$PROJECT_DIR$/004-money-common/004-money-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/005-money-web/005-money-web.iml" filepath="$PROJECT_DIR$/005-money-web/005-money-web.iml" />
+    </modules>
+  </component>
+</project>

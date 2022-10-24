@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" addBOMForNewFiles="with NO BOM">
+    <file url="file://$PROJECT_DIR$/001-money-parent" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/002-money-exterface" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/003-money-dataservice" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/003-money-dataservice" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/004-money-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/005-money-web" charset="UTF-8" />
+  </component>
+</project>

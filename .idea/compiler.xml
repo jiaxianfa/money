@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="002-money-exterface" />
+        <module name="003-money-dataservice" />
+        <module name="004-money-common" />
+        <module name="005-money-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="001-money-parent" target="1.8" />
+      <module name="002-money-exterface" target="1.8" />
+      <module name="003-money-dataservice" target="1.8" />
+      <module name="004-money-common" target="1.8" />
+      <module name="005-money-web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="001-money-parent" options="-parameters" />
+      <module name="002-money-exterface" options="-parameters" />
+      <module name="003-money-dataservice" options="-parameters" />
+      <module name="004-money-common" options="-parameters" />
+      <module name="005-money-web" options="-parameters" />
+    </option>
+  </component>
+</project>
